@@ -1,5 +1,3 @@
-const { create, index } = require('./OngController');
-
 const connection = require('../database/connection');
 module.exports = {
   async create(request, response) {
@@ -7,7 +5,7 @@ module.exports = {
     const ong_id = request.headers.authorization;
     if (!ong_id) {
       console.log('Error');
-      return;
+      return response.status(401);
     }
 
     const [id] = await connection('incidents').insert({
@@ -20,8 +18,32 @@ module.exports = {
     return response.json({ id });
   },
   async index(request, response) {
-    const incidents = await connection('incidents').select('*');
+    const { page = 1 } = request.query;
 
+    const [count] = await connection('incidents').count();
+
+    const incidents = await connection('incidents')
+      .join('ongs', 'ongs.id', '=', 'incidents.ong_id')
+      .limit(5)
+      .offset((page - 1) * 5)
+      .select(['incidents.*', 'ongs.name', 'ongs.email', 'ongs.whatsapp', 'ongs.city', 'ongs.uf']);
+
+    response.header('X-Total-Count', count['count(*)']);
     return response.json(incidents);
+  },
+
+  async delete(request, response) {
+    const { id } = request.params;
+    const ong_id = request.headers.authorization;
+
+    const incident = await connection('incidents').where('id', id).select('ong_id').first();
+
+    if (incident.ong_id !== ong_id) {
+      return response.status(401).json({ error: 'Opperation forbidden.' });
+    }
+
+    await connection('incidents').where('id', id).delete();
+
+    return response.status(204).send();
   }
 };
