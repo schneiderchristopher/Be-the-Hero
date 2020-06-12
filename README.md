@@ -16,7 +16,7 @@ O **Be The Hero** permite que pessoas ajudem financeiramente ONGs de todo Brasil
 ### Dentre as features:
 
 - Cadastro & Login para ONGs
-- Uma intereface de perfil para criação de casos
+- Uma interface de perfil para criação de casos
 - O beneficente tem acesso a todos os casos no aplicativo mobile
 - O mesmo também pode contatar ONGs via WhatsApp ou e-mail fornecido pelo aplicativo.
 
