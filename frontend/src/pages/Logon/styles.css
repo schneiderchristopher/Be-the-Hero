@@ -8,3 +8,11 @@
   align-items: center;
   justify-content: space-between;
 }
+
+h1 {
+  padding-top: 48px;
+}
+
+form input {
+  padding-top: 24px;
+}
